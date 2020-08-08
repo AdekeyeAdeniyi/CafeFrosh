@@ -1,0 +1,204 @@
+{
+    "product":[
+        {
+            "id":          "1",
+            "title":       "Avocado Mix",
+            "price":        1000,
+            "imgUrl":       "imgs/avodacomix.jpg",
+            "type":         "meal",
+            "categories":   "salad"
+        },
+        {
+            "id":          "2",
+            "title":       "Beef Wrap",
+            "price":        1500,
+            "imgUrl":       "imgs/beefwrap.jpg",
+            "type":         "meal",
+            "categories":   "breakfast"
+        },
+        {
+            "id":          "3",
+            "title":       "Bowl",
+            "price":        2000,
+            "imgUrl":       "imgs/bowl.jpg",
+            "type":         "meal",
+            "categories":   "smoothies"
+        },
+        {
+            "id":          "4",
+            "title":       "Chapman",
+            "price":        1000,
+            "imgUrl":       "imgs/chapman.jpg",
+            "type":         "meal",
+            "categories":   "kiddesSmoothies"
+        },
+        {
+            "id":          "5",
+            "title":       "Chicken Salad",
+            "price":        1500,
+            "imgUrl":       "imgs/chickensalad.jpg",
+            "type":         "meal",
+            "categories":   "bowl"
+        },
+        {
+            "id":          "6",
+            "title":       "Chicken wrap",
+            "price":        1500,
+            "imgUrl":       "imgs/chickenwrap.jpg",
+            "type":         "smoothies",
+            "categories":   "drinks"
+        },
+        {
+            "id":          "7",
+            "title":       "Clean and Green",
+            "price":        1000,
+            "imgUrl":       "imgs/cleanandgreen.jpg",
+            "type":         "smoothies",
+            "categories":   "juice"
+        },
+        {
+            "id":          "8",
+            "title":       "English Breakfast",
+            "price":        3000,
+            "imgUrl":       "imgs/englishbreakfast.jpg",
+            "type":         "smoothies",
+            "categories":   "juice"
+        },
+        {
+            "id":          "9",
+            "title":       "Frosh Breakfast",
+            "price":        2000,
+            "imgUrl":       "imgs/froshbreakfast.jpg",
+            "type":         "smoothies",
+            "categories":   "drinks"
+        },
+        {
+            "id":          "10",
+            "title":       "Frosty",
+            "price":        1000,
+            "imgUrl":       "imgs/frosty.jpg",
+            "type":         "smoothies",
+            "categories":   "bowl"
+        },
+        {
+            "id":          "11",
+            "title":       "Fruit Bowl",
+            "price":        800,
+            "imgUrl":       "imgs/fruitbowl2.jpg",
+            "type":         "smoothies",
+            "categories":   "kiddesSmoothies"
+        },
+        {
+            "id":          "12",
+            "title":       "Pulp-A-Pine",
+            "price":        2500,
+            "imgUrl":       "imgs/greeksalad.jpg",
+            "type":         "smoothies",
+            "categories":   "smoothies"
+        },
+        {
+            "id":          "13",
+            "title":       "Greek Yoghurt",
+            "price":        2000,
+            "imgUrl":       "imgs/greekyoghurt.jpg",
+            "type":         "smoothies",
+            "categories":   "breakfast"
+        },
+        {
+            "id":          "14",
+            "title":       "Guacamole salat",
+            "price":        1500,
+            "imgUrl":       "imgs/guacamolesalat.jpg",
+            "type":         "smoothies",
+            "categories":   "salad"
+        },
+        {
+            "id":          "15",
+            "title":       "Ice Coffee",
+            "price":        1000,
+            "imgUrl":       "imgs/icecoffee.jpg",
+            "type":         "smoothies",
+            "categories":   "juice"
+        },
+        {
+            "id":          "16",
+            "title":       "Nurti Salad",
+            "price":        2500,
+            "imgUrl":       "imgs/nurtiblastsalad.jpg",
+            "type":         "smoothies",
+            "categories":   "drinks"
+        },
+        {
+            "id":          "17",
+            "title":       "Oat Meal",
+            "price":        1500,
+            "imgUrl":       "imgs/oatmeal.jpg",
+            "type":         "smoothies",
+            "categories":   "bowl"
+        },
+        {
+            "id":          "18",
+            "title":       "Orange Juice",
+            "price":        1000,
+            "imgUrl":       "imgs/orangejuice.jpg",
+            "type":         "smoothies",
+            "categories":   "kiddesSmoothies"
+        },
+        {
+            "id":          "19",
+            "title":       "Papaya Sunrise",
+            "price":        1000,
+            "imgUrl":       "imgs/papayasunrise.jpg",
+            "type":         "smoothies",
+            "categories":   "smoothies"
+        },
+        {
+            "id":          "20",
+            "title":       "Parfait",
+            "price":        1000,
+            "imgUrl":       "imgs/parfait.jpg",
+            "type":         "smoothies",
+            "categories":   "breakfast"
+        },
+        {
+            "id":          "21",
+            "title":       "Paw-Paw/Orange",
+            "price":        1000,
+            "imgUrl":       "imgs/pawpaworange.jpg",
+            "type":         "smoothies",
+            "categories":   "salad"
+        },
+        {
+            "id":          "22",
+            "title":       "Sandwich",
+            "price":        800,
+            "imgUrl":       "imgs/sandwick.jpg",
+            "type":         "smoothies",
+            "categories":   "juice"
+        },
+        {
+            "id":          "23",
+            "title":       "Shrimp Salad",
+            "price":        2500,
+            "imgUrl":       "imgs/shrimpsalad.jpg",
+            "type":         "smoothies",
+            "categories":   "drinks"
+        },
+        {
+            "id":          "24",
+            "title":       "Tuna Salad",
+            "price":        2000,
+            "imgUrl":       "imgs/tunasalad.jpg",
+            "type":         "smoothies",
+            "categories":   "bowl"
+        },
+        {
+            "id":          "26",
+            "title":       "Uber Green",
+            "price":        1500,
+            "imgUrl":       "imgs/ubergreen.jpg",
+            "type":         "smoothies",
+            "categories":   "kiddesSmoothies"
+        }
+    ]
+}

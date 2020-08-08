@@ -1,0 +1,537 @@
+
+
+
+// UI Controller
+
+let UIController = (() =>{
+
+    let Domstrings = {
+ 
+         toggleNav:              ".navigation-menu",
+         cartBtn:                ".btn-cart",
+         closeCartBtn:           ".close-cart",
+         humburger:              ".humburger",
+         cartOverlay:            ".cart-viewOverlay",  
+         cartDom:                ".cart-view",  
+         cartItems:              ".navigation-cart",    
+         cartTotal:              ".total", 
+         cartContent:            ".cart-detail",   
+         productDom:             ".menu-details",
+         cart:                   ".navigation-icons",
+         clearBtn:               "#clearCart",
+         filter:                 ".filter-btn",
+         drop:                   ".dropdown"
+ 
+    };
+ 
+    return{
+        getDomstring: ()=>{
+            return Domstrings;
+        },
+ 
+        addListItems: (meal)=>{
+ 
+         let html, newhtml, element;
+         element=Domstrings.productDom;
+ 
+         //getting template string
+            html=`<div class="meal-details">
+                <div class="img-wrapper" style="background-image: url(%url%);">
+                    <figure>
+                        <button class=btn-cart type="button" data-id="%id%"><ion-icon name="cart"></ion-icon> Add to cart </button>
+                    </figure>
+                </div>
+
+                <h4>%title%</h4>
+                <p>N %price%</p>
+            </div>`
+ 
+         //Replace the placeholder text
+         newhtml = html.replace('%url%', meal.imgUrl);
+         newhtml = newhtml.replace('%title%', meal.title);
+         newhtml = newhtml.replace('%id%', meal.id);
+         newhtml = newhtml.replace('%price%', new Intl.NumberFormat().format(meal.price));
+ 
+ 
+         //Insert HTML into the Dom
+         document.querySelector(element).insertAdjacentHTML('beforeend', newhtml);
+        },
+ 
+        // Getting all cartBtn
+        getButtons:  ()=>{
+            const buttons = [...document.querySelectorAll(Domstrings.cartBtn)];
+             //    return buttons;
+             return buttons;
+        },
+
+        // update cart values
+        updateCart: (priceTotal, cartTotal, items)=>{
+
+            let cartDom, newhtml;
+            
+            document.querySelector(Domstrings.cartItems).innerText = cartTotal;
+            document.querySelector(Domstrings.cartTotal).innerText = new Intl.NumberFormat().format(priceTotal);
+
+            // console.log(Object.keys(items).length !== 0)
+
+            if(Object.keys(items).length !== 0 && items.constructor === Object){
+
+            // update cartItems
+            cartDom = `<div class="cart-items">
+                <img src="%url%" alt="meal"/>
+
+                <div class="cart-description">
+                    <h4>%title%</h4>
+                    <p> N %price%</p>
+                    <span class="remove-item" data-id="%id%">remove</span>
+                </div>
+
+                <div class="cart-no">
+                    <ion-icon name="chevron-up" class="addItems" data-id=%id-up%></ion-icon>
+                    <span>%amount%</span>
+                    <ion-icon name="chevron-down" class="reduceItems" data-id=%id-down%></ion-icon>
+                </div>
+            </div>`;
+
+                //Replace the placeholder text
+                newhtml = cartDom.replace('%url%', items.imgUrl);
+                newhtml = newhtml.replace('%title%', items.title);
+                newhtml = newhtml.replace('%id%', items.id);
+                newhtml = newhtml.replace('%id-up%', items.id);
+                newhtml = newhtml.replace('%id-down%', items.id);
+                newhtml = newhtml.replace('%price%', items.price);
+                newhtml = newhtml.replace('%amount%', items.amount);
+                //Insert HTML into the Dom
+                document.querySelector(Domstrings.cartContent).insertAdjacentHTML('beforeend', newhtml);
+            }
+
+        },
+
+        display: ()=> {
+            document.querySelector(Domstrings.cartOverlay).classList.add("cart-viewOverlayVisible");
+            document.querySelector(Domstrings.cartDom).classList.add("cart-viewExpand");
+        },
+
+        close: ()=> {
+            document.querySelector(Domstrings.cartOverlay).classList.remove("cart-viewOverlayVisible");
+            document.querySelector(Domstrings.cartDom).classList.remove("cart-viewExpand");
+        },
+    }
+ 
+ })();
+ 
+ // Data Controller
+ 
+ let DataController = (() =>{
+ 
+     // getting product from JSON file
+     let products = (async getProducts =>{
+        try {
+             let products =  await fetch("./products.json");
+             let data = await products.json();
+             return data;
+        } catch (error) {
+             console.log(error);
+        }
+     })();
+
+     //cart button
+    //  let buttons = [];
+ 
+     return{
+         productList: ()=>{
+             return products;
+         },
+ 
+         //localstorage method
+         storage: (item, name) => {
+             localStorage.setItem(item, JSON.stringify(name));
+         },
+ 
+         //getting all the cart button
+        //  buttons: (items)=>{
+        //      buttons = items;
+        //  },
+
+        // getting product from localStorage
+        product: (id)=> {
+            let result =  JSON.parse(localStorage.getItem("product"));
+            return result.find(items => items.id === id);
+        },
+
+        //retrieving cartTotal and PriceTotal
+        total: (items) => {
+            let priceTotal = 0;
+            let cartTotal = 0;
+
+            items.map(el =>{
+                priceTotal += (el.price * el.amount);
+                cartTotal += el.amount;
+            });
+
+            return{
+                priceTotal, cartTotal
+            };
+        },
+
+        getCartProduct: (name) => {
+            return localStorage.getItem(name) ? JSON.parse(localStorage.getItem(name)) : [];
+        },
+
+        clearCart: (item, remove, cart) =>{
+            let id = item.map(el => el.id);
+            id.forEach(el => {
+                remove(el);
+            })
+
+            while(cart.children.length > 0){
+                cart.removeChild(cart.children[0]);
+            }
+        },
+
+        getButtons: (id, buttons)=>{
+            return buttons().find(item => item.dataset.id == id);
+        },
+
+        toggle:(id) =>{
+            let current = document.getElementsByClassName("active");
+            current[0].className = current[0].className.replace("active", " ")
+            id.className += " active";
+        },
+
+        search: (dom, product,id)=>{
+            let meal = product.filter(el => el.type == id);
+            document.querySelector(dom).innerHTML = "";
+
+            return meal;
+        },
+
+        list: (dom, product,id)=>{
+            let meal = product.filter(el => el.categories == id );
+            document.querySelector(dom).innerHTML = "";
+
+            return meal;
+        },
+
+        animate: (id)=>{
+            document.querySelector(id).classList.add("zoom");
+            setTimeout(()=>{
+                document.querySelector(id).classList.remove("zoom");
+            }, 1000)
+        },
+
+        display: (id, dom)=>{
+
+            if(id != undefined){
+                let arr = [...document.querySelector(dom).children];
+            
+                arr.forEach(el => {
+                    el.classList.remove("viewDrop");
+                });
+            
+                id.classList.add("viewDrop");
+        
+            }else{
+                let arr = [...document.querySelector(dom).children];
+            
+                arr.forEach(el => {
+                    el.classList.remove("viewDrop");
+                }); 
+            }
+         }
+     }
+ })();
+ 
+ // Controller
+ 
+ let Controller = ((UICtrl, DataCtrl) =>{
+
+    let cart = [];
+ 
+     const Dom = UICtrl.getDomstring();
+ 
+     let setupEventListener = function() {
+         const humburger = document.querySelector(Dom.humburger);
+         const toggleNav = document.querySelector(Dom.toggleNav);
+ 
+         // Navigation toggler
+         humburger.addEventListener("click", ()=>{
+             humburger.classList.toggle("toggle");
+             toggleNav.classList.toggle("show");
+         });
+
+         
+        updateCartItems();
+     };
+ 
+     //Getting the products
+     DataCtrl.productList().then((r)=>{
+ 
+         // Looping products
+         r.product.forEach(el => {
+             
+             UICtrl.addListItems(el)
+ 
+             //store products in local storage
+             DataCtrl.storage("product", r.product);
+         });
+ 
+         }).catch(err =>{
+             console.log(err);
+         }).then(()=>{
+     
+
+            //addItems to cart
+            ctrlAddItem(UICtrl.getButtons());
+
+            // clear cart
+            clear();
+
+         });
+
+        let ctrlAddItem = (buttons)=>{
+
+            buttons.forEach(item => {
+                let id = item.dataset.id;
+                let inCart = cart.find(item => item.id == id);
+
+                //check if current button is in cart
+                if(inCart){
+                    item.innerText = "In cart";
+                    item.disabled = true;
+                    // UICtrl.display();
+                }
+                item.addEventListener("click", (e)=>{
+                    // console.log(e);
+                    e.target.innerText = "In cart";
+                    e.target.disabled = true;
+
+                    //get products from localstorage
+                    let currentProduct = {...DataCtrl.product(id), amount : 1};
+                    // add current product to the cart
+                    cart.push(currentProduct);
+                    // save cart in localstorage
+                    DataCtrl.storage("cartProduct", cart);
+                    //set cart values
+                    let {priceTotal, cartTotal} = DataCtrl.total(cart);
+                    //update price total and cartTotal
+                    UICtrl.updateCart(priceTotal, cartTotal, currentProduct);
+                    //display cartOverlay and cart
+                    UICtrl.display();
+                })
+            })
+        };
+
+        var updateCartItems= ()=>{
+            cart = DataCtrl.getCartProduct("cartProduct");
+            let {priceTotal, cartTotal} = DataCtrl.total(cart);
+
+            cart.forEach(el => {
+                UICtrl.updateCart(priceTotal, cartTotal, el);
+            });
+
+            // display cart
+            document.querySelector(Dom.cart).addEventListener("click", ()=>{
+                UICtrl.display();
+            })
+
+            // hide cart
+            // document.querySelector(Dom.closeCartBtn).addEventListener("click", ()=>{
+            //     UICtrl.close();
+            // })
+
+            // document.querySelector(Dom.cartOverlay).addEventListener("click", ()=>{
+            //     UICtrl.close();
+            // })
+
+            document.querySelector(Dom.closeCartBtn).addEventListener("click", ()=>{
+                    UICtrl.close();
+            });
+            
+        };
+
+        let cartDom = document.querySelector(Dom.cartContent);
+
+        let clear = ()=>{
+
+            document.querySelector(Dom.clearBtn).addEventListener("click",()=>{
+
+                DataCtrl.clearCart(cart, removeItem, cartDom);
+
+                UICtrl.close();
+            });
+
+            cartDom.addEventListener("click", event=>{
+                if(event.target.classList.contains("remove-item")){
+                    let removeProduct = event.target;
+                    let id = removeProduct.dataset.id;
+                    
+                    cartDom.removeChild(removeProduct.parentElement.parentElement);
+
+                    removeItem(id);
+                }else if(event.target.classList.contains("addItems")){
+                    let addAmont = event.target;
+                    let id =addAmont.dataset.id;
+
+                    let curItem = cart.find(item => item.id == id);
+                    curItem.amount = curItem.amount + 1;
+
+                    DataCtrl.storage("cartProduct", cart);
+                    let {priceTotal, cartTotal} = DataCtrl.total(cart);
+                    UICtrl.updateCart(priceTotal, cartTotal, cart);
+                    addAmont.nextElementSibling.innerText = curItem.amount;
+
+
+                }else if(event.target.classList.contains("reduceItems")){
+                    let reduceAmont = event.target;
+
+                    let id =reduceAmont.dataset.id;
+
+                    let curItem = cart.find(item => item.id == id);
+
+                    curItem.amount = curItem.amount - 1;
+
+                    if(curItem.amount > 0){
+                        
+                        DataCtrl.storage("cartProduct", cart);
+                        let {priceTotal, cartTotal} = DataCtrl.total(cart);
+                        UICtrl.updateCart(priceTotal, cartTotal, cart);
+
+                        reduceAmont.previousElementSibling.innerText = curItem.amount;
+                    }else{
+                        cartDom.removeChild(reduceAmont.parentElement.parentElement);
+                        removeItem(id);  
+                        UICtrl.close();
+                    }
+                   
+                }
+            }) 
+        };
+
+        var removeItem = (id) =>{
+            cart = cart.filter(item => item.id != id);
+            let {priceTotal, cartTotal} = DataCtrl.total(cart);
+
+            UICtrl.updateCart(priceTotal, cartTotal, cart);
+            DataCtrl.storage("cartProduct", cart);
+
+            let button = DataCtrl.getButtons(id, UICtrl.getButtons);
+            button.disabled = false;
+            button.innerHTML= `<ion-icon name="cart"></ion-icon> Add to cart`;
+        }
+
+        document.querySelector(Dom.filter).addEventListener("click", e=>{
+            e.preventDefault();
+            let taget = e.target;
+            let product = DataCtrl.getCartProduct("product");
+            if(e.target.classList.contains("all")){
+                DataCtrl.toggle(taget);
+                document.querySelector(Dom.productDom).innerHTML = "";
+                product.forEach(el =>{
+                    UICtrl.addListItems(el);
+                })
+
+                ctrlAddItem(UICtrl.getButtons());
+
+                DataCtrl.animate(Dom.productDom);
+
+                DataCtrl.display(undefined, Dom.drop);
+                
+            }else if(e.target.classList.contains("meal")){
+                DataCtrl.toggle(taget, "active");
+                let id = taget.dataset.filter;
+                let meal = DataCtrl.search(Dom.productDom, product,id);
+
+                meal.forEach(el =>{
+                    UICtrl.addListItems(el);
+                });
+
+                ctrlAddItem(UICtrl.getButtons());
+                
+                DataCtrl.animate(Dom.productDom);
+
+               
+                let dom = document.querySelector(Dom.drop).firstElementChild.nextElementSibling; 
+
+                DataCtrl.display(dom, Dom.drop);
+
+
+            }else if(e.target.classList.contains("smoothies")){
+                DataCtrl.toggle(taget);
+                let id = taget.dataset.filter;
+                let meal = DataCtrl.search(Dom.productDom, product, id);
+                meal.forEach(el =>{
+                    UICtrl.addListItems(el);
+                })
+
+                ctrlAddItem(UICtrl.getButtons());
+
+                DataCtrl.animate(Dom.productDom);
+
+                let dom = document.querySelector(Dom.drop).firstElementChild;
+                DataCtrl.display(dom, Dom.drop);
+            }
+
+            
+         });
+
+
+         document.querySelector(".dropdown").addEventListener("click", e =>{
+            let product = DataCtrl.getCartProduct("product");
+            let taget = e.target.dataset.catergories;
+            if(taget != undefined){
+                let meal = DataCtrl.list(Dom.productDom, product,taget);
+                meal.forEach(el =>{
+                    UICtrl.addListItems(el);
+                });
+                
+                
+                ctrlAddItem(UICtrl.getButtons());
+                DataCtrl.animate(Dom.productDom);
+
+            }
+            
+            // if(e.target.classList.contains("smoothies")){
+                
+            // }else if(e.target.classList.contains("kid")){
+                
+            // }else if(e.target.classList.contains("bowl")){
+                
+            // }else if(e.target.classList.contains("drinks")){
+                
+            // }else if(e.target.classList.contains("juice")){
+                
+            // }else if(e.target.classList.contains("breakfast")){
+               
+            // }else if(e.target.classList.contains("salad")){
+                
+            // }
+        })
+        
+ 
+     return{
+         init: ()=>{
+             console.log("Application is running!!")
+             document.querySelector(Dom.cartItems).innerText = 0;
+             document.querySelector(Dom.cartTotal).innerText = 0;
+ 
+             setupEventListener();
+         }
+     }
+
+     
+ })(UIController, DataController);
+ 
+ Controller.init();
+ 
+
+
+var button = () => {
+    
+
+}
+
+button();
+
+ 
+
